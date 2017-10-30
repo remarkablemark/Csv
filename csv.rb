@@ -1,8 +1,7 @@
 class Csv
   DELIMITER = "\n"
-  QUOTE = '"'
 
-  def self.parse(string, separator=',')
+  def self.parse(string, separator=',', quote='"')
     records = []
     fields = []
     field = nil
@@ -14,23 +13,27 @@ class Csv
       next_char = chars[index + 1]
 
       if is_field_quoted
-        if char == QUOTE && (next_char == separator || next_char == DELIMITER || next_char == nil)
-          fields.push(field.gsub '""', '"')
+        if char == quote && (next_char == separator || next_char == DELIMITER || next_char == nil)
+          # replace 2 quotes with 1 quote in field
+          fields.push(field.gsub quote * 2, quote)
           field = nil
-          records.push(fields) if next_char == nil || next_char == DELIMITER
-        elsif prev_char == QUOTE && (char == separator || char == DELIMITER)
+          if next_char == nil || next_char == DELIMITER
+            records.push(fields)
+            fields = []
+          end
+        elsif prev_char == quote && (char == separator || char == DELIMITER)
           is_field_quoted = false
         else
           field += char
         end
         next
-      elsif char == QUOTE && field == nil
+      elsif char == quote && field == nil
         is_field_quoted = true
         field = ''
         next
       end
 
-      if char == separator && prev_char != QUOTE
+      if char == separator && prev_char != quote
         fields.push(field)
         field = nil
         # ensure empty field is added at line break or end

@@ -120,4 +120,11 @@ class TestCsv < MiniTest::Test
     assert_equal expected.to_s, actual.to_s
     assert expected == actual
   end
+
+  def test_for_custom_separator_and_quote
+    expected = [['alternate', '"quote"'], [], ['character', 'hint: |']]
+    actual = Csv.parse("|alternate|\t|\"quote\"|\n\n|character|\t|hint: |||", "\t", '|')
+    assert_equal expected.to_s, actual.to_s
+    assert expected == actual
+  end
 end
