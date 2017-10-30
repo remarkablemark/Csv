@@ -127,4 +127,15 @@ class TestCsv < MiniTest::Test
     assert_equal expected.to_s, actual.to_s
     assert expected == actual
   end
+
+  def test_for_unclosed_quote_error
+    assert_raises ArgumentError do
+      Csv.parse('"dog","cat","uhoh')
+    end
+    begin
+      Csv.parse('"dog","cat","uhoh')
+    rescue ArgumentError => error
+      assert_equal 'unclosed quote', error.message
+    end
+  end
 end

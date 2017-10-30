@@ -2,6 +2,8 @@ class Csv
   DELIMITER = "\n"
 
   def self.parse(string, separator=',', quote='"')
+    raise ArgumentError, 'unclosed quote' if string.count(quote) % 2 != 0
+
     records = []
     fields = []
     field = nil
