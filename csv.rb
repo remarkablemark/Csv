@@ -1,6 +1,26 @@
+# An interface for parsing CSV.
+#
+# @author Menglin "Mark" Xu
+# @abstract
+# @see https://tools.ietf.org/html/rfc4180 The CSV spec.
 class Csv
   DELIMITER = "\n"
 
+  # Parses a CSV string into its array equivalent.
+  #
+  # @example Parse CSV string with defaults
+  #   Csv.parse('a,b') #=> [["a", "b"]]
+  #
+  # @example Parse CSV string with custom separator
+  #   Csv.parse("a\tb", "\t") #=> [["a", "b"]]
+  #
+  # @example Parse CSV string with custom quote
+  #   Csv.parse('|a|,|b|', ',', '|') #=> [["a", "b"]]
+  #
+  # @param [String] string The CSV string.
+  # @param [String] separator The character to divide each field.
+  # @param [String] quote The character to denote quoted field.
+  # @return [Array] The CSV formatted as an array.
   def self.parse(string, separator=',', quote='"')
     raise ArgumentError, 'unclosed quote' if string.count(quote) % 2 != 0
 
